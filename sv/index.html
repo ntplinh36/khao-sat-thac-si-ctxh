@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Khảo sát sinh viên năm 3–4 ngành Công tác xã hội</title>
+<style>
+:root{font-family:system-ui,sans-serif;color:#182643;background:#eef1f8;line-height:1.55}
+*{box-sizing:border-box}body{margin:0;padding:clamp(12px,4vw,48px)}
+main{max-width:760px;margin:auto;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 16px 48px #13244816}
+header{padding:clamp(24px,5vw,44px);color:#fff;background:radial-gradient(ellipse at 110% 100%,#8b557b,transparent 65%),#142546}
+header p{margin:0 0 8px;color:#f5dbe8}h1{line-height:1.15;font-size:clamp(1.65rem,4vw,2.6rem);margin:0}
+section{padding:clamp(20px,5vw,40px)}h2{line-height:1.25;margin:8px 0 20px}
+fieldset{margin:0 0 24px;padding:0;border:0;min-width:0}legend{font-weight:720;margin-bottom:10px;padding:0}
+label.choice{display:flex;gap:12px;align-items:flex-start;padding:11px 13px;border:1px solid #dce2ee;border-radius:10px;margin-bottom:6px;cursor:pointer}
+.choice:has(input:checked){background:#f0edf8;border-color:#9b85ae}
+input[type=radio],input[type=checkbox]{accent-color:#51345f;margin-top:.36em;flex:none}
+input[type=text],textarea{display:block;width:100%;font:inherit;border:1px solid #aab4ca;border-radius:9px;padding:10px;margin-top:6px}
+textarea{min-height:105px;resize:vertical}
+nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+button{font:inherit;font-weight:700;background:#142546;color:#fff;border:0;border-radius:10px;padding:12px 20px;cursor:pointer}
+button.secondary{background:#edf0f7;color:#142546}button:disabled{opacity:.6}
+:focus-visible{outline:3px solid #995c83;outline-offset:3px}
+progress{width:100%;height:10px;accent-color:#794b73}small{font-size:.88rem;color:#4a5770}
+#status{color:#8d243d;font-weight:650}
+
+body { background: radial-gradient(ellipse at 95% 0%, #f5dce9 0%, transparent 52%), radial-gradient(ellipse at 0% 50%, #dde7f9 0%, transparent 65%), #eef1f8; min-height: 100vh; }
+main { max-width: 800px; border: 1px solid #dde3ef; }
+header { position:relative; padding: 24px clamp(20px,5vw,40px); }
+header p { font-size: .9rem; margin:0 0 6px; }
+h1 { font-size:clamp(1.3rem,3.5vw,1.85rem); }
+.cover { display:none; width:100%; height:auto; }
+.welcome .cover { display:block; }
+.welcome header { padding-block:clamp(30px,6vw,58px); background:radial-gradient(ellipse at 105% 110%,#8b557b,transparent 72%),#142546; }
+.welcome header h1 {font-size:clamp(1.65rem,5vw,2.6rem);}
+.lead { font-weight:650; font-size:1.075rem; }
+.duration { display:inline-block; border-radius:99px; padding:5px 13px; background:#f5e8f0; color:#633652; font-weight:700; margin:0 0 8px; }
+.intro-note { border-left:3px solid #956180; padding:8px 13px; background:#faf5f9; margin:20px 0 24px; border-radius:0 8px 8px 0; }
+fieldset { padding:14px 16px 15px; border:1px solid #e1e6f1; border-radius:14px; background:#f8f9fd; }
+legend { padding:0 5px; }
+label.choice { background:#fff; min-height:44px; }
+.choice:has(input:checked) { background:#f5ebf4; border-color:#956180; }
+progress { appearance:none; display:block; border:0; border-radius:50px; overflow:hidden; background:#e7ebf4; margin-bottom:19px; }
+progress::-webkit-progress-bar { background:#e7ebf4; }
+progress::-webkit-progress-value { background:linear-gradient(90deg,#253f68,#935a81); }
+progress::-moz-progress-bar { background:linear-gradient(90deg,#253f68,#935a81); }
+@media(max-width:480px) { main{border-radius:16px} fieldset{padding-inline:10px} nav button{flex:1} .welcome button{width:100%} }
+</style></head>
+<body><main class="welcome">
+
+<header><p>Trường Đại học Tôn Đức Thắng · Bộ môn Công tác xã hội</p><h1>Khảo sát định hướng nghề nghiệp và nhu cầu học thạc sĩ</h1></header>
+<section id="screen"></section>
+</main>
+<script>
+const questions = [{"title": "Hiện bạn đang là sinh viên năm mấy?", "options": ["Năm 3", "Năm 4"]}, {"title": "Bạn dự kiến tốt nghiệp vào năm nào? ………………", "options": null, "kind": "year"}, {"title": "Bạn đã tham gia thực hành, thực tập hoặc có trải nghiệm việc làm liên quan đến CTXH chưa?", "options": ["Chưa", "Đã thực hành hoặc thực tập", "Đã có trải nghiệm việc làm liên quan đến CTXH"]}, {"title": "Dự kiến sau tốt nghiệp, kế hoạch chính của bạn là gì?", "options": ["Tìm việc hoặc làm việc trong CTXH hay lĩnh vực liên quan", "Tìm việc hoặc làm việc ngoài lĩnh vực CTXH", "Học tiếp", "Chưa xác định"], "other": true}, {"title": "Nếu làm việc trong CTXH hoặc lĩnh vực liên quan, bạn ưu tiên loại hình đơn vị nào?", "options": ["Cơ quan hành chính nhà nước", "Trường học hoặc cơ sở đào tạo", "Bệnh viện hoặc cơ sở y tế", "Cơ sở bảo trợ xã hội hoặc trung tâm cung cấp dịch vụ công tác xã hội", "Tổ chức chính trị – xã hội hoặc đoàn thể (Hội Phụ nữ, Đoàn Thanh niên…)", "Tổ chức phi lợi nhuận/phi chính phủ Việt Nam", "Tổ chức phi lợi nhuận/phi chính phủ quốc tế", "Doanh nghiệp"], "other": true, "max": 2}, {"title": "Nếu làm việc trong CTXH hoặc lĩnh vực liên quan, bạn ưu tiên lĩnh vực nào?", "options": ["Y tế, chăm sóc sức khỏe và phục hồi chức năng", "Sức khỏe tâm thần, tham vấn và hỗ trợ tâm lý – xã hội", "Giáo dục, đào tạo hoặc hỗ trợ học đường", "An sinh và trợ giúp xã hội (ví dụ hỗ trợ người cao tuổi, người khuyết tật)", "Bảo vệ, chăm sóc trẻ em và hỗ trợ gia đình", "Công tác thanh niên", "Công tác phụ nữ và bình đẳng giới", "Phát triển cộng đồng", "Việc làm, hướng nghiệp và hỗ trợ sinh kế", "Tư pháp, trợ giúp pháp lý và hỗ trợ tái hòa nhập", "Nghiên cứu khoa học", "Kinh doanh, thương mại và dịch vụ"], "other": true, "max": 2}, {"title": "Bạn ưu tiên làm việc ở địa bàn nào sau tốt nghiệp?", "options": ["TP. Hồ Chí Minh", "Tỉnh/thành khác", "Ngoài Việt Nam", "Chưa xác định"], "detail": {"1": "Tên tỉnh/thành", "2": "Tên quốc gia"}}, {"title": "Trong 3 năm đầu sau tốt nghiệp, bạn muốn đảm nhiệm nhóm công việc nào?", "options": ["Thực hành CTXH, quản lý ca", "Điều phối chương trình/dự án", "Quản lý dịch vụ, giám sát chuyên môn", "Nghiên cứu, đào tạo", "Phân tích, tham mưu chính sách xã hội", "Chưa xác định"], "other": true, "max": 2, "exclusive": 5}, {"title": "Trong 5 năm đầu sau tốt nghiệp, bạn có dự định đăng ký học thạc sĩ CTXH không?", "options": ["Chắc chắn có", "Có khả năng đăng ký", "Chưa quyết định"]}, {"title": "Nếu có dự định đăng ký học thạc sĩ, bạn dự kiến bắt đầu học khi nào (tính từ lúc tốt nghiệp đại học)?", "options": ["Trong 12 tháng đầu", "Từ tháng 13 đến tháng 36", "Sau 36 tháng", "Chưa xác định"]}, {"title": "Nếu Trường Đại học Tôn Đức Thắng mở chương trình đào tạo thạc sĩ CTXH và bạn đáp ứng điều kiện dự tuyển, khả năng bạn chọn học ở Trường ở mức nào?", "options": ["Cao", "Trung bình", "Thấp"]}, {"title": "Bạn ưu tiên định hướng đào tạo nào?", "options": ["Định hướng ứng dụng - Tập trung vận dụng kiến thức và kỹ năng để giải quyết các vấn đề trong thực tiễn nghề nghiệp, chẳng hạn như xây dựng đề án về kế hoạch hỗ trợ thân chủ hoặc cải thiện dịch vụ công tác xã hội.", "Định hướng nghiên cứu - Tập trung phát triển năng lực nghiên cứu, chẳng hạn như xây dựng câu hỏi nghiên cứu, thu thập và phân tích dữ liệu về một vấn đề trong công tác xã hội.", "Chưa xác định"]}, {"title": "Bạn ưu tiên cách tổ chức học nào?", "options": ["Trực tiếp", "Trực tuyến", "Kết hợp trực tiếp và trực tuyến"]}, {"title": "Bạn muốn chương trình thạc sĩ giúp phát triển những năng lực nào?", "options": ["Đánh giá nhu cầu tâm lý - xã hội và lập kế hoạch can thiệp", "Thực hiện can thiệp CTXH nâng cao và quản lý ca phức tạp", "Phối hợp liên ngành và huy động nguồn lực hỗ trợ", "Xử lý tình huống đạo đức và bảo mật thông tin", "Thiết kế và điều phối chương trình, dự án xã hội", "Theo dõi, đánh giá dịch vụ hoặc chương trình bằng dữ liệu", "Nghiên cứu ứng dụng để giải quyết vấn đề thực tiễn", "Phân tích và đề xuất chính sách xã hội", "Giám sát chuyên môn và hỗ trợ phát triển đội ngũ", "Sử dụng công cụ số để quản lý hồ sơ và dữ liệu dịch vụ"], "max": 3}, {"title": "Bạn có đề xuất gì về nội dung hoặc cách xây dựng chương trình đào tạo?", "options": null, "kind": "long", "optional": true}];
+const screen = document.querySelector('#screen');
+const answers = questions.map(() => ({values: [], text: ''}));
+const receipt = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+const pages = [["Thông tin và kế hoạch sau tốt nghiệp", [1, 2, 3, 4]], ["Định hướng nghề nghiệp", [5, 6, 7, 8]], ["Dự định học thạc sĩ", [9]], ["Thời điểm dự kiến học", [10]], ["Lựa chọn chương trình", [11, 12, 13]], ["Kỳ vọng về chương trình", [14, 15]]];
+const visible = () => [0,1,2,...(answers[8].values[0] === 2 ? [] : [3]),4,5];
+let active = -1;
+let correcting = false;
+const completed = new Set();
+
+function openCorrection(n, message) {
+  correcting = true;
+  active = pages.findIndex(page => page[1].includes(n));
+  completed.delete(active);
+  show();
+  document.querySelector('#status').textContent = message;
+  document.getElementById('question-' + n).querySelector('input:not([disabled]), textarea')?.focus();
+}
+
+function el(tag, text, parent) {
+  const node = document.createElement(tag);
+  if (text) node.textContent = text;
+  parent.append(node);
+  return node;
+}
+
+function question(form, n) {
+  const q = questions[n - 1];
+  const answer = answers[n - 1];
+  const field = el('fieldset','',form);
+  field.id = 'question-' + n;
+  el('legend',n + '. ' + q.title,field);
+  if (q.max) el('small','Chọn tối đa ' + q.max + ' phương án.',field);
+  if (q.optional) el('small','Không bắt buộc.',field);
+  const entry = el('label','',field);
+  const prompt = el('span','',entry);
+  const input = el(q.kind === 'long' ? 'textarea' : 'input','',entry);
+  if (input.tagName === 'INPUT') input.type = 'text';
+  input.maxLength = q.kind === 'long' ? 3000 : 250;
+  if (q.kind === 'year') {
+    input.oninvalid = () => {
+      input.setCustomValidity('Nhập năm dự kiến tốt nghiệp gồm 4 chữ số, từ 2026 trở đi.');
+    };
+    input.inputMode = 'numeric';
+    input.pattern = '[0-9]{4}';
+    input.maxLength = 4;
+  }
+  input.value = answer.text;
+  input.oninput = () => { input.setCustomValidity(''); answer.text = input.value; };
+  const choices = q.options ? [...q.options, ...(q.other ? ['Khác'] : [])] : [];
+  const controls = choices.map((choice,index) => {
+    const label = document.createElement('label');
+    label.className = 'choice';
+    field.insertBefore(label,entry);
+    const control = el('input','',label);
+    control.type = q.max ? 'checkbox' : 'radio';
+    control.name = 'q' + n;
+    control.checked = answer.values.includes(index);
+    if (!q.max) control.required = true;
+    el('span',choice,label);
+    return control;
+  });
+  function refresh() {
+    const detail = q.options && (q.detail?.[answer.values[0]] ||
+      (q.other && answer.values.includes(q.options.length) ? 'Vui lòng ghi rõ' : ''));
+    entry.hidden = Boolean(q.options && !detail);
+    input.disabled = entry.hidden;
+    input.required = !entry.hidden && !q.optional;
+    prompt.textContent = detail || (q.kind === 'year' ? 'Nhập năm gồm bốn chữ số, từ 2026 trở đi' : 'Câu trả lời');
+  }
+  for (const control of controls) control.onchange = () => {
+    const prior = answer.values;
+    let selected = controls.flatMap((c,i) => c.checked ? [i] : []);
+    if (control.checked && q.exclusive !== undefined) {
+      selected = selected.includes(q.exclusive) && !prior.includes(q.exclusive) ? [q.exclusive] : selected.filter(i => i !== q.exclusive);
+      controls.forEach((c,i) => { c.checked = selected.includes(i); });
+    }
+    if (q.max && selected.length > q.max) {
+      controls.forEach((c,i) => { c.checked = prior.includes(i); });
+      document.querySelector('#status').textContent = 'Câu ' + n + ' chỉ được chọn tối đa ' + q.max + ' phương án.';
+      return;
+    }
+    if ((!q.max && prior[0] !== selected[0]) || (q.other && prior.includes(q.options.length) && !selected.includes(q.options.length))) {
+      answer.text = input.value = '';
+    }
+    answer.values = selected;
+    document.querySelector('#status').textContent = '';
+    refresh();
+  };
+  refresh();
+}
+
+function show() {
+  screen.replaceChildren();
+  screen.parentElement.classList.toggle('welcome', active < 0);
+  if (active < 0) {
+    el('p','Thời gian trả lời khoảng 5–7 phút',screen).className = 'duration';
+    el('h2','Thư mời tham gia khảo sát',screen);
+    el('p','Thân gửi các bạn sinh viên năm 3 và năm 4 ngành Công tác xã hội,',screen).className = 'lead';
+    el('p',"Bộ môn Công tác xã hội (CTXH), Khoa Khoa học Xã hội và Nhân văn, Trường Đại học Tôn Đức Thắng đang thực hiện khảo sát định hướng nghề nghiệp và dự định học tiếp của sinh viên ngành CTXH để xây dựng đề án mở chương trình đào tạo trình độ thạc sĩ Công tác xã hội.",screen);
+    el('p','Việc tham gia là tự nguyện. Kết quả khảo sát sẽ được trình bày dưới dạng tổng hợp.',screen).className = 'intro-note';
+    const begin = el('button','Đang kiểm tra kết nối…',screen);
+    begin.disabled = true;
+    const message = el('p','',screen);
+    message.setAttribute('role','status');
+    async function checkConnection() {
+      try {
+        const response = await fetch('https://khao-sat-nhan-luc-ctxh.cottondogwood4.chatgpt.site/api/sv/health', {signal:AbortSignal.timeout(20000)});
+        if (!response.ok) throw new Error();
+        begin.disabled=false;begin.textContent='Bắt đầu khảo sát';
+        message.textContent='';
+        begin.onclick=()=>{active=0;show();};
+      } catch(error) {
+        begin.disabled=false;begin.textContent='Kiểm tra lại kết nối';
+        message.textContent='Phiếu đang được cập nhật kết nối. Vui lòng kiểm tra lại sau.';
+        begin.onclick=()=>{begin.disabled=true;checkConnection();};
+      }
+    }
+    checkConnection();
+    return;
+  }
+  const path = visible();
+  const index = path.indexOf(active);
+  const progress = el('progress','',screen);
+  progress.max = path.length;
+  progress.value = index + 1;
+  progress.setAttribute('aria-label','Tiến độ trả lời');
+  const heading = el('h2',pages[active][0],screen);
+  heading.tabIndex = -1;
+  const form = el('form','',screen);
+  for (const n of pages[active][1]) question(form,n);
+  if (active === 5) el('p','Bộ môn Công tác xã hội chân thành cảm ơn bạn đã dành thời gian chia sẻ.',form);
+  const status = el('p','',form);
+  status.id = 'status';
+  status.setAttribute('role','status');
+  const nav = el('nav','',form);
+  const back = el('button','Quay lại',nav);
+  back.className = 'secondary';
+  back.type = 'button';
+  back.onclick = () => { active = visible()[visible().indexOf(active)-1] ?? -1; show(); };
+  const next = el('button',active === 5 ? 'Gửi khảo sát' :
+    correcting ? 'Lưu chỉnh sửa' : 'Tiếp tục',nav);
+  form.onsubmit = async event => {
+    event.preventDefault();
+    status.textContent = '';
+    for (const n of pages[active][1]) {
+      if (questions[n-1].max && !answers[n-1].values.length) {
+        status.textContent = 'Vui lòng chọn ít nhất một phương án ở Câu ' + n + '.';
+        return;
+      }
+    }
+    if (active === 0) {
+      const year = Number(answers[1].text);
+      if (year < 2026 || year > 9999) {
+        status.textContent = 'Câu 2. Nhập năm dự kiến tốt nghiệp gồm 4 chữ số, từ 2026 trở đi.';
+        document.querySelector('#question-2 input').focus();
+        return;
+      }
+    }
+    if (active !== 5) {
+      completed.add(active);
+      const updated = visible();
+      if (correcting) {
+        active = updated.find(page => page !== 5 && !completed.has(page)) ?? 5;
+        correcting = active !== 5;
+      } else {
+        active = updated[updated.indexOf(active) + 1];
+      }
+      show();
+      return;
+    }
+
+    next.disabled = back.disabled = true;
+    next.textContent = 'Đang gửi…';
+    for (const control of form.elements) control.disabled = true;
+    const sent = () => {
+      screen.replaceChildren();
+      const heading = el('h2','Cảm ơn bạn đã tham gia khảo sát!',screen);
+      heading.tabIndex = -1;
+      heading.focus();
+      el('p','Bộ môn Công tác xã hội đã nhận được phản hồi của bạn.',screen);
+    };
+    const failed = error => {
+      const message = error?.message || 'Vui lòng thử lại.';
+      const invalid = message.match(/Vui lòng kiểm tra Câu (\d+)\./);
+      if (invalid) {
+        const n = Number(invalid[1]);
+        if (visible().some(page => pages[page][1].includes(n))) {
+          openCorrection(n, 'Vui lòng kiểm tra Câu ' + n + ' rồi lưu chỉnh sửa.');
+          return;
+        }
+      }
+      status.textContent = 'Chưa gửi được phản hồi. ' + message;
+      for (const control of form.elements) control.disabled = control.closest('label')?.hidden || false;
+      next.textContent = 'Gửi lại';
+    };
+    try {
+      const response = await fetch('https://khao-sat-nhan-luc-ctxh.cottondogwood4.chatgpt.site/api/sv/submit', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:receipt,answers}),signal:AbortSignal.timeout(45000)
+      });
+      const result = await response.json();
+      if (!response.ok || !result.ok) throw new Error(result.error || 'Chưa ghi được phản hồi.');
+      sent();
+    } catch(error) { failed(error); }
+  };
+  heading.focus();
+  window.scrollTo(0,0);
+}
+show();
+</script>
+</body></html>
