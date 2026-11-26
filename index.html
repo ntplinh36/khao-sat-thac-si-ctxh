@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Khảo sát đơn vị sử dụng lao động</title>
+<style>
+:root{font-family:system-ui,sans-serif;color:#182643;background:#eef1f8;line-height:1.55}
+*{box-sizing:border-box}body{margin:0;padding:clamp(12px,4vw,48px)}
+main{max-width:760px;margin:auto;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 16px 48px #13244816}
+header{padding:clamp(24px,5vw,44px);color:#fff;background:radial-gradient(ellipse at 110% 100%,#8b557b,transparent 65%),#142546}
+header p{margin:0 0 8px;color:#f5dbe8}h1{line-height:1.15;font-size:clamp(1.65rem,4vw,2.6rem);margin:0}
+section{padding:clamp(20px,5vw,40px)}h2{line-height:1.25;margin:8px 0 20px}
+fieldset{margin:0 0 24px;padding:0;border:0;min-width:0}legend{font-weight:720;margin-bottom:10px;padding:0}
+label.choice{display:flex;gap:12px;align-items:flex-start;padding:11px 13px;border:1px solid #dce2ee;border-radius:10px;margin-bottom:6px;cursor:pointer}
+.choice:has(input:checked){background:#f0edf8;border-color:#9b85ae}
+input[type=radio],input[type=checkbox]{accent-color:#51345f;margin-top:.36em;flex:none}
+input[type=text],textarea{display:block;width:100%;font:inherit;border:1px solid #aab4ca;border-radius:9px;padding:10px;margin-top:6px}
+textarea{min-height:105px;resize:vertical}
+nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+button{font:inherit;font-weight:700;background:#142546;color:#fff;border:0;border-radius:10px;padding:12px 20px;cursor:pointer}
+button.secondary{background:#edf0f7;color:#142546}button:disabled{opacity:.6}
+:focus-visible{outline:3px solid #995c83;outline-offset:3px}
+progress{width:100%;height:10px;accent-color:#794b73}small{font-size:.88rem;color:#4a5770}
+#status{color:#8d243d;font-weight:650}
+
+body { background: radial-gradient(ellipse at 95% 0%, #f5dce9 0%, transparent 52%), radial-gradient(ellipse at 0% 50%, #dde7f9 0%, transparent 65%), #eef1f8; min-height: 100vh; }
+main { max-width: 800px; border: 1px solid #dde3ef; }
+header { position:relative; padding: 24px clamp(20px,5vw,40px); }
+header p { font-size: .9rem; margin:0 0 6px; }
+h1 { font-size:clamp(1.3rem,3.5vw,1.85rem); }
+.cover { display:none; width:100%; height:auto; }
+.welcome .cover { display:block; }
+.welcome header { background:#142546; }
+.welcome header h1 { font-size:clamp(1.6rem,4vw,2.5rem); }
+.lead { font-weight:650; font-size:1.075rem; }
+.duration { display:inline-block; border-radius:99px; padding:5px 13px; background:#f5e8f0; color:#633652; font-weight:700; margin:0 0 8px; }
+.intro-note { border-left:3px solid #956180; padding:8px 13px; background:#faf5f9; margin:20px 0 24px; border-radius:0 8px 8px 0; }
+fieldset { padding:14px 16px 15px; border:1px solid #e1e6f1; border-radius:14px; background:#f8f9fd; }
+legend { padding:0 5px; }
+label.choice { background:#fff; min-height:44px; }
+.choice:has(input:checked) { background:#f5ebf4; border-color:#956180; }
+progress { appearance:none; display:block; border:0; border-radius:50px; overflow:hidden; background:#e7ebf4; margin-bottom:19px; }
+progress::-webkit-progress-bar { background:#e7ebf4; }
+progress::-webkit-progress-value { background:linear-gradient(90deg,#253f68,#935a81); }
+progress::-moz-progress-bar { background:linear-gradient(90deg,#253f68,#935a81); }
+@media(max-width:480px) { main{border-radius:16px} fieldset{padding-inline:10px} nav button{flex:1} .welcome button{width:100%} }
+.group{border:1px solid #e1e6f1;border-radius:14px;padding:14px;margin-bottom:22px}.group h3{margin:0 0 14px;font-size:1rem}.group fieldset{margin-bottom:10px}.hint{margin:0 0 14px;color:#4a5770}.scale{display:flex;flex-wrap:wrap;gap:6px}.scale label.choice{margin:0}fieldset p{margin:0 0 8px}</style></head>
+<body><main class="welcome">
+
+<header><p>Trường Đại học Tôn Đức Thắng · Bộ môn Công tác xã hội</p><h1>Khảo sát nhu cầu nhân lực có trình độ thạc sĩ Công tác xã hội</h1></header>
+<section id="screen"></section>
+</main>
+<script>
+const GROUPS={"1":{"title":"Tên đơn vị","fields":[{"key":"1.0","column":"1. Tên đơn vị"}]},"2":{"title":"Vai trò người trả lời:","fields":[{"options":["Quản lý đơn vị","Phụ trách nhân sự","Phụ trách chuyên môn","Khác"],"detail":{"3":"Ghi rõ vai trò"},"key":"2.0","column":"2. Vai trò người trả lời:"}]},"3":{"title":"Đơn vị thuộc loại hình nào?","fields":[{"options":["Cơ quan hành chính nhà nước","Trường học hoặc cơ sở đào tạo","Bệnh viện hoặc cơ sở y tế","Cơ sở bảo trợ xã hội hoặc trung tâm cung cấp dịch vụ công tác xã hội","Tổ chức chính trị – xã hội hoặc đoàn thể (Hội Phụ nữ, Đoàn Thanh niên…)","Tổ chức phi lợi nhuận/phi chính phủ Việt Nam","Tổ chức phi lợi nhuận/phi chính phủ quốc tế","Doanh nghiệp","Khác"],"detail":{"8":"Ghi rõ loại hình"},"key":"3.0","column":"3. Đơn vị thuộc loại hình nào?"}]},"4":{"title":"Đơn vị hoạt động trong các lĩnh vực nào?","fields":[{"options":["Y tế, chăm sóc sức khỏe và phục hồi chức năng","Sức khỏe tâm thần, tham vấn và hỗ trợ tâm lý – xã hội","Giáo dục, đào tạo hoặc hỗ trợ học đường","An sinh và trợ giúp xã hội (ví dụ hỗ trợ người cao tuổi, người khuyết tật…)","Bảo vệ, chăm sóc trẻ em và hỗ trợ gia đình","Công tác thanh niên","Công tác phụ nữ và bình đẳng giới","Phát triển cộng đồng","Việc làm, hướng nghiệp và hỗ trợ sinh kế","Tư pháp, trợ giúp pháp lý và hỗ trợ tái hòa nhập","Nghiên cứu khoa học","Kinh doanh, thương mại và dịch vụ","Khác"],"max":3,"detail":{"12":"Ghi rõ lĩnh vực"},"key":"4.0","column":"4. Đơn vị hoạt động trong các lĩnh vực nào?"}]},"5":{"title":"Đơn vị có nhân sự CTXH đang làm việc ở địa bàn nào?","fields":[{"options":["TP. Hồ Chí Minh","Tỉnh/thành khác","Ngoài Việt Nam","Chưa có nhân sự CTXH"],"max":4,"detail":{"1":"Tên tỉnh/thành","2":"Tên quốc gia"},"exclusive":3,"key":"5.0","column":"5. Đơn vị có nhân sự CTXH đang làm việc ở địa bàn nào?"}]},"6":{"title":"Khi tuyển nhân lực CTXH, đơn vị thường tìm ứng viên từ đâu?","fields":[{"options":["TP. Hồ Chí Minh","Tỉnh/thành khác","Ngoài Việt Nam","Chưa tuyển hoặc chưa xác định"],"max":4,"detail":{"1":"Tên tỉnh/thành","2":"Tên quốc gia"},"exclusive":3,"key":"6.0","column":"6. Khi tuyển nhân lực CTXH, đơn vị thường tìm ứng viên từ đâu?"}]},"7":{"title":"Hiện có bao nhiêu nhân sự đang thực hiện nhiệm vụ CTXH và liên quan đến CTXH?","fields":[{"label":"Tổng số","kind":"number","key":"7.0","column":"7. Hiện có bao nhiêu nhân sự đang thực hiện nhiệm vụ CTXH và liên quan đến CTXH? · Tổng số"},{"label":"Trong đó, có bằng thạc sĩ CTXH","kind":"number","key":"7.1","column":"7. Hiện có bao nhiêu nhân sự đang thực hiện nhiệm vụ CTXH và liên quan đến CTXH? · Trong đó, có bằng thạc sĩ CTXH"}]},"8":{"title":"Trong 12 tháng vừa qua, đơn vị đã tuyển được bao nhiêu nhân sự thực hiện nhiệm vụ CTXH và liên quan đến CTXH?","fields":[{"label":"Tổng số","kind":"number","key":"8.0","column":"8. Trong 12 tháng vừa qua, đơn vị đã tuyển được bao nhiêu nhân sự thực hiện nhiệm vụ CTXH và liên quan đến CTXH? · Tổng số"},{"label":"Trong đó, có bằng thạc sĩ CTXH","kind":"number","key":"8.1","column":"8. Trong 12 tháng vừa qua, đơn vị đã tuyển được bao nhiêu nhân sự thực hiện nhiệm vụ CTXH và liên quan đến CTXH? · Trong đó, có bằng thạc sĩ CTXH"}]},"9":{"title":"Kể từ thời điểm trả lời, đơn vị dự kiến cần tuyển bao nhiêu người cho các công việc CTXH hoặc liên quan trong vòng 3 – 5 năm tới?","fields":[{"label":"Trong 1 năm tới · Số nhân sự cần tuyển","kind":"number","key":"9.0","column":"9. Kể từ thời điểm trả lời, đơn vị dự kiến cần tuyển bao nhiêu người cho các công việc CTXH hoặc liên quan trong vòng 3 – 5 năm tới? · Trong 1 năm tới · Số nhân sự cần tuyển"},{"label":"Trong 1 năm tới · Bắt buộc có bằng thạc sĩ CTXH","kind":"number","key":"9.1","column":"9. Kể từ thời điểm trả lời, đơn vị dự kiến cần tuyển bao nhiêu người cho các công việc CTXH hoặc liên quan trong vòng 3 – 5 năm tới? · Trong 1 năm tới · Bắt buộc có bằng thạc sĩ CTXH"},{"label":"Trong 1 năm tới · Ưu tiên có bằng thạc sĩ CTXH","kind":"number","key":"9.2","column":"9. Kể từ thời điểm trả lời, đơn vị dự kiến cần tuyển bao nhiêu người cho các công việc CTXH hoặc liên quan trong vòng 3 – 5 năm tới? · Trong 1 năm tới · Ưu tiên có bằng thạc sĩ CTXH"},{"label":"Trên 1 năm đến 3 năm · Số nhân sự cần tuyển","kind":"number","key":"9.3","column":"9. Kể từ thời điểm trả lời, đơn vị dự kiến cần tuyển bao nhiêu người cho các công việc CTXH hoặc liên quan trong vòng 3 – 5 năm tới? · Trên 1 năm đến 3 năm · Số nhân sự cần tuyển"},{"label":"Trên 1 năm đến 3 năm · Bắt buộc có bằng thạc sĩ CTXH","kind":"number","key":"9.4","column":"9. Kể từ thời điểm trả lời, đơn vị dự kiến cần tuyển bao nhiêu người cho các công việc CTXH hoặc liên quan trong vòng 3 – 5 năm tới? · Trên 1 năm đến 3 năm · Bắt buộc có bằng thạc sĩ CTXH"},{"label":"Trên 1 năm đến 3 năm · Ưu tiên có bằng thạc sĩ CTXH","kind":"number","key":"9.5","column":"9. Kể từ thời điểm trả lời, đơn vị dự kiến cần tuyển bao nhiêu người cho các công việc CTXH hoặc liên quan trong vòng 3 – 5 năm tới? · Trên 1 năm đến 3 năm · Ưu tiên có bằng thạc sĩ CTXH"},{"label":"Trên 3 năm đến 5 năm · Số nhân sự cần tuyển","kind":"number","key":"9.6","column":"9. Kể từ thời điểm trả lời, đơn vị dự kiến cần tuyển bao nhiêu người cho các công việc CTXH hoặc liên quan trong vòng 3 – 5 năm tới? · Trên 3 năm đến 5 năm · Số nhân sự cần tuyển"},{"label":"Trên 3 năm đến 5 năm · Bắt buộc có bằng thạc sĩ CTXH","kind":"number","key":"9.7","column":"9. Kể từ thời điểm trả lời, đơn vị dự kiến cần tuyển bao nhiêu người cho các công việc CTXH hoặc liên quan trong vòng 3 – 5 năm tới? · Trên 3 năm đến 5 năm · Bắt buộc có bằng thạc sĩ CTXH"},{"label":"Trên 3 năm đến 5 năm · Ưu tiên có bằng thạc sĩ CTXH","kind":"number","key":"9.8","column":"9. Kể từ thời điểm trả lời, đơn vị dự kiến cần tuyển bao nhiêu người cho các công việc CTXH hoặc liên quan trong vòng 3 – 5 năm tới? · Trên 3 năm đến 5 năm · Ưu tiên có bằng thạc sĩ CTXH"}]},"10":{"title":"Mức độ xác định của dự kiến trên là gì?","fields":[{"options":["Đã có kế hoạch/chỉ tiêu được duyệt","Đang xây dựng kế hoạch","Ước tính theo nhu cầu công việc","Chưa xác định","Không có nhu cầu tuyển"],"key":"10.0","column":"10. Mức độ xác định của dự kiến trên là gì?"}]},"11":{"title":"Trong 3 năm tới, đơn vị dự kiến có bao nhiêu nhân sự hiện hữu được cử hoặc hỗ trợ học thạc sĩ CTXH?","fields":[{"kind":"countOrUnknown","help":"Ghi 0 nếu không có hoặc KXĐ nếu chưa xác định.","key":"11.0","column":"11. Trong 3 năm tới, đơn vị dự kiến có bao nhiêu nhân sự hiện hữu được cử hoặc hỗ trợ học thạc sĩ CTXH?"}]},"12":{"title":"Đối với các vị trí có thể giao cho người tốt nghiệp thạc sĩ CTXH, đơn vị kỳ vọng từng năng lực ở mức nào?","fields":[{"label":"1. Đánh giá nhu cầu tâm lý – xã hội và lập kế hoạch can thiệp","options":["1","2","3","4","5","KXĐ"],"scale":true,"key":"12.0","column":"12. Đối với các vị trí có thể giao cho người tốt nghiệp thạc sĩ CTXH, đơn vị kỳ vọng từng năng lực ở mức nào? · 1. Đánh giá nhu cầu tâm lý – xã hội và lập kế hoạch can thiệp"},{"label":"2. Thực hiện can thiệp CTXH nâng cao và quản lý ca phức tạp","options":["1","2","3","4","5","KXĐ"],"scale":true,"key":"12.1","column":"12. Đối với các vị trí có thể giao cho người tốt nghiệp thạc sĩ CTXH, đơn vị kỳ vọng từng năng lực ở mức nào? · 2. Thực hiện can thiệp CTXH nâng cao và quản lý ca phức tạp"},{"label":"3. Phối hợp liên ngành và huy động nguồn lực hỗ trợ","options":["1","2","3","4","5","KXĐ"],"scale":true,"key":"12.2","column":"12. Đối với các vị trí có thể giao cho người tốt nghiệp thạc sĩ CTXH, đơn vị kỳ vọng từng năng lực ở mức nào? · 3. Phối hợp liên ngành và huy động nguồn lực hỗ trợ"},{"label":"4. Xử lý tình huống đạo đức và bảo mật thông tin","options":["1","2","3","4","5","KXĐ"],"scale":true,"key":"12.3","column":"12. Đối với các vị trí có thể giao cho người tốt nghiệp thạc sĩ CTXH, đơn vị kỳ vọng từng năng lực ở mức nào? · 4. Xử lý tình huống đạo đức và bảo mật thông tin"},{"label":"5. Thiết kế và điều phối chương trình, dự án xã hội","options":["1","2","3","4","5","KXĐ"],"scale":true,"key":"12.4","column":"12. Đối với các vị trí có thể giao cho người tốt nghiệp thạc sĩ CTXH, đơn vị kỳ vọng từng năng lực ở mức nào? · 5. Thiết kế và điều phối chương trình, dự án xã hội"},{"label":"6. Theo dõi, đánh giá dịch vụ hoặc chương trình bằng dữ liệu","options":["1","2","3","4","5","KXĐ"],"scale":true,"key":"12.5","column":"12. Đối với các vị trí có thể giao cho người tốt nghiệp thạc sĩ CTXH, đơn vị kỳ vọng từng năng lực ở mức nào? · 6. Theo dõi, đánh giá dịch vụ hoặc chương trình bằng dữ liệu"},{"label":"7. Nghiên cứu ứng dụng để giải quyết vấn đề thực tiễn","options":["1","2","3","4","5","KXĐ"],"scale":true,"key":"12.6","column":"12. Đối với các vị trí có thể giao cho người tốt nghiệp thạc sĩ CTXH, đơn vị kỳ vọng từng năng lực ở mức nào? · 7. Nghiên cứu ứng dụng để giải quyết vấn đề thực tiễn"},{"label":"8. Phân tích và đề xuất chính sách xã hội","options":["1","2","3","4","5","KXĐ"],"scale":true,"key":"12.7","column":"12. Đối với các vị trí có thể giao cho người tốt nghiệp thạc sĩ CTXH, đơn vị kỳ vọng từng năng lực ở mức nào? · 8. Phân tích và đề xuất chính sách xã hội"},{"label":"9. Giám sát chuyên môn và hỗ trợ phát triển đội ngũ","options":["1","2","3","4","5","KXĐ"],"scale":true,"key":"12.8","column":"12. Đối với các vị trí có thể giao cho người tốt nghiệp thạc sĩ CTXH, đơn vị kỳ vọng từng năng lực ở mức nào? · 9. Giám sát chuyên môn và hỗ trợ phát triển đội ngũ"},{"label":"10. Sử dụng công cụ số để quản lý hồ sơ và dữ liệu dịch vụ","options":["1","2","3","4","5","KXĐ"],"scale":true,"key":"12.9","column":"12. Đối với các vị trí có thể giao cho người tốt nghiệp thạc sĩ CTXH, đơn vị kỳ vọng từng năng lực ở mức nào? · 10. Sử dụng công cụ số để quản lý hồ sơ và dữ liệu dịch vụ"}]},"13":{"title":"Trong danh sách năng lực ở câu 12, đâu là 3 năng lực đơn vị ưu tiên nhất khi tuyển hoặc bố trí công việc?","fields":[{"options":["1. Đánh giá nhu cầu tâm lý – xã hội và lập kế hoạch can thiệp","2. Thực hiện can thiệp CTXH nâng cao và quản lý ca phức tạp","3. Phối hợp liên ngành và huy động nguồn lực hỗ trợ","4. Xử lý tình huống đạo đức và bảo mật thông tin","5. Thiết kế và điều phối chương trình, dự án xã hội","6. Theo dõi, đánh giá dịch vụ hoặc chương trình bằng dữ liệu","7. Nghiên cứu ứng dụng để giải quyết vấn đề thực tiễn","8. Phân tích và đề xuất chính sách xã hội","9. Giám sát chuyên môn và hỗ trợ phát triển đội ngũ","10. Sử dụng công cụ số để quản lý hồ sơ và dữ liệu dịch vụ","Chưa xác định"],"max":3,"exclusive":10,"key":"13.0","column":"13. Trong danh sách năng lực ở câu 12, đâu là 3 năng lực đơn vị ưu tiên nhất khi tuyển hoặc bố trí công việc?"}]},"14":{"title":"Xin nêu một nhiệm vụ thực tế mà đơn vị kỳ vọng người tốt nghiệp thạc sĩ CTXH có thể đảm nhiệm.","fields":[{"kind":"long","optional":true,"key":"14.0","column":"14. Xin nêu một nhiệm vụ thực tế mà đơn vị kỳ vọng người tốt nghiệp thạc sĩ CTXH có thể đảm nhiệm."}]},"15":{"title":"Đơn vị có yêu cầu bổ sung nào về kinh nghiệm, ngoại ngữ hoặc năng lực chuyên môn khác?","fields":[{"kind":"long","optional":true,"key":"15.0","column":"15. Đơn vị có yêu cầu bổ sung nào về kinh nghiệm, ngoại ngữ hoặc năng lực chuyên môn khác?"}]}};
+const PAGES=[["Thông tin đơn vị",[1,2,3,4,5,6]],["Hiện trạng nhân sự và tuyển dụng",[7,8]],["Nhu cầu tuyển dụng và đào tạo",[10,9,11]],["Năng lực kỳ vọng",[12]],["Ưu tiên và yêu cầu bổ sung",[13,14,15]]];
+function questionError(n, answers) {
+  if (n === 9 && [3, 4].includes(answers['10.0']?.values?.[0])) return '';
+  const fields = GROUPS[n].fields;
+  for (const f of fields) {
+    const a = answers[f.key] || {};
+    if (f.options) {
+      const v = a.values;
+      if (!Array.isArray(v) || !v.length || v.length > (f.max || 1) ||
+          new Set(v).size !== v.length || v.some(i => !Number.isInteger(i) || i < 0 || i >= f.options.length) ||
+          (v.length > 1 && v.includes(f.exclusive))) return 'Vui lòng chọn phương án phù hợp.';
+      if (v.some(i => f.detail?.[i] && (typeof a.details?.[i] !== 'string' ||
+          !a.details[i].trim() || a.details[i].length > 250))) return 'Vui lòng điền thông tin cho phương án đã chọn.';
+      continue;
+    }
+    const value = typeof a.text === 'string' ? a.text.trim() : '';
+    if ((!f.optional && !value) || value.length > (f.kind === 'long' ? 3000 : 250)) return 'Vui lòng kiểm tra nội dung trả lời.';
+    if (f.kind === 'number' || f.kind === 'countOrUnknown') {
+      if (f.kind === 'countOrUnknown' && value.toUpperCase() === 'KXĐ') continue;
+      if (!/^\d+$/.test(value) || !Number.isSafeInteger(Number(value))) return 'Vui lòng nhập số nguyên từ 0 trở lên' + (f.kind === 'countOrUnknown' ? ' hoặc KXĐ.' : '.');
+    }
+  }
+  const counts = fields.map(f => Number(answers[f.key]?.text));
+  if ([7,8].includes(n) && counts[1] > counts[0]) return 'Số có bằng thạc sĩ không thể lớn hơn tổng số nhân sự.';
+  if (n === 9) {
+    for (let i=0; i<counts.length; i+=3) {
+      if (counts[i+1]+counts[i+2] > counts[i]) return 'Tổng số vị trí bắt buộc và ưu tiên bằng thạc sĩ không thể vượt số cần tuyển trong cùng giai đoạn.';
+    }
+  }
+  return '';
+}
+
+const screen = document.querySelector('#screen');
+const answers = {};
+const receipt = globalThis.crypto?.randomUUID?.() || Date.now() + '-' + Math.random().toString(36).slice(2);
+let page = -1;
+let correcting = false;
+
+function el(tag,text,parent) {
+  const e = document.createElement(tag);
+  e.textContent = text;
+  parent.append(e);
+  return e;
+}
+function renderField(parent,f) {
+  const a = answers[f.key] ||= {values:[],details:{},text:''};
+  const field = el('fieldset','',parent);
+  if (f.label) el('legend',f.label,field);
+  if (f.help) el('p',f.help,field).className = 'hint';
+  if (!f.options) {
+    const input = el(f.kind === 'long' ? 'textarea' : 'input','',field);
+    if (input.tagName === 'INPUT') input.type='text';
+    input.setAttribute('aria-label',f.label || f.column);
+    input.maxLength = f.kind === 'long' ? 3000 : 250;
+    if (f.kind === 'number') input.inputMode = 'numeric';
+    input.value = a.text;
+    input.oninput = () => { a.text = input.value; };
+    return;
+  }
+  const choices = el('div','',field);
+  if (f.scale) choices.className = 'scale';
+  const controls = [];
+  const extras = [];
+  f.options.forEach((option,i) => {
+    const label = el('label','',choices);
+    label.className = 'choice';
+    const input = el('input','',label);
+    input.type = f.max ? 'checkbox' : 'radio';
+    input.name = f.key;
+    input.checked = a.values.includes(i);
+    el('span',option,label);
+    controls.push(input);
+    let detail;
+    if (f.detail?.[i]) {
+      detail = el('label',f.detail[i],field);
+      const extra = el('input','',detail);
+      extra.type='text';
+      extra.value = a.details[i] || '';
+      extra.maxLength = 250;
+      extra.oninput = () => { a.details[i] = extra.value; };
+    }
+    extras.push(detail);
+    input.onchange = () => {
+      let selected = controls.flatMap((c,j)=>c.checked?[j]:[]);
+      if (input.checked && f.exclusive === i) selected = [i];
+      else if (input.checked && f.exclusive !== undefined) selected = selected.filter(j=>j!==f.exclusive);
+      if (selected.length > (f.max || 1)) {
+        parent.lastElementChild.textContent='Vui lòng chọn tối đa '+f.max+' phương án.';
+        selected = a.values;
+      } else {
+        parent.lastElementChild.textContent='';
+      }
+      a.values = selected;
+      controls.forEach((c,j)=>{ c.checked=selected.includes(j); });
+      extras.forEach((e,j)=>{ if(e) e.hidden=!selected.includes(j); });
+      if (f.key === '10.0') {
+        document.getElementById('q-9').hidden = [3,4].includes(a.values[0]);
+      }
+    };
+  });
+  extras.forEach((e,j)=>{if(e) e.hidden=!a.values.includes(j);});
+}
+
+function show(issue) {
+  screen.replaceChildren();
+  screen.parentElement.classList.toggle('welcome',page<0);
+  if (page<0) {
+    el('p','Thời gian trả lời khoảng 8–10 phút',screen).className='duration';
+    el('h2','Thư mời tham gia khảo sát',screen);
+    el('p','Kính gửi Quý Đơn vị,',screen).className='lead';
+    el('p','Bộ môn Công tác xã hội, Khoa Khoa học Xã hội và Nhân văn, Trường Đại học Tôn Đức Thắng kính mời Quý Đơn vị chia sẻ về hiện trạng nhân sự, nhu cầu tuyển dụng và năng lực kỳ vọng. Kết quả khảo sát sẽ góp phần xây dựng đề án mở chương trình đào tạo trình độ thạc sĩ Công tác xã hội.',screen);
+    el('p','Việc tham gia là tự nguyện. Kết quả khảo sát sẽ được trình bày dưới dạng tổng hợp.',screen).className='intro-note';
+    const begin = el('button','Đang kiểm tra kết nối…',screen);
+    begin.disabled = true;
+    const connection = el('p','',screen);
+    connection.setAttribute('role','status');
+    async function checkConnection() {
+      try {
+        const response = await fetch('https://khao-sat-nhan-luc-ctxh.cottondogwood4.chatgpt.site/api/health', {signal:AbortSignal.timeout(20000)});
+        if (!response.ok) throw new Error();
+        begin.disabled=false;
+        begin.textContent='Bắt đầu khảo sát';
+        connection.textContent='';
+        begin.onclick=()=>{page=0;show();};
+      } catch(error) {
+        connection.textContent='Phiếu đang được cập nhật kết nối. Vui lòng kiểm tra lại sau.';
+        begin.disabled=false;
+        begin.textContent='Kiểm tra lại kết nối';
+        begin.onclick=()=>{begin.disabled=true;checkConnection();};
+      }
+    }
+    checkConnection();
+    return;
+  }
+  const progress=el('progress','',screen);
+  progress.max=PAGES.length;
+  progress.value=page+1;
+  progress.setAttribute('aria-label','Tiến độ khảo sát');
+  const heading=el('h2',PAGES[page][0],screen);
+  heading.tabIndex=-1;
+  const form=el('form','',screen);
+  for(const n of PAGES[page][1]) {
+    const g=GROUPS[n];
+    const box=el('div','',form);
+    box.className='group';
+    box.id='q-'+n;
+    if(n===9) box.hidden=[3,4].includes(answers['10.0']?.values?.[0]);
+    el('h3',n+'. '+g.title,box);
+    if(n===12) el('p','1 = Không cần · 2 = Ít cần · 3 = Cần ở mức vừa · 4 = Cần ở mức cao · 5 = Rất cần · KXĐ = Chưa có cơ sở đánh giá.',box).className='hint';
+    if(n===4 || n===13) el('p','Chọn tối đa 3 phương án.',box).className='hint';
+    if(n===14 || n===15) el('small','Không bắt buộc.',box);
+    g.fields.forEach(f=>renderField(box,f));
+    const error=el('p','',box);
+    error.setAttribute('role','status');
+    error.style.color='#8d243d';
+  }
+  const last=page===PAGES.length-1;
+  if(last) el('p','Bộ môn Công tác xã hội chân thành cảm ơn Quý Đơn vị đã dành thời gian đóng góp ý kiến.',form);
+  const status=el('p','',form);
+  status.id='status';
+  status.setAttribute('role','status');
+  const nav=el('nav','',form);
+  const back=el('button','Quay lại',nav);
+  back.className='secondary';
+  back.type='button';
+  back.onclick=()=>{page--;show();};
+  const next=el('button',last?'Gửi khảo sát':correcting?'Lưu chỉnh sửa':'Tiếp tục',nav);
+  function displayError(n,message) {
+    const box=document.getElementById('q-'+n);
+    box.lastElementChild.textContent=message;
+    box.querySelector('input,textarea')?.focus();
+  }
+  form.onsubmit=async event=>{
+    event.preventDefault();
+    for(const n of PAGES[page][1]) {
+      const error=questionError(n,answers);
+      if(error){displayError(n,error);return;}
+    }
+    if(!last){
+      page=correcting?PAGES.length-1:page+1;
+      correcting=false;
+      show();
+      return;
+    }
+    for (const [n] of Object.entries(GROUPS)) {
+      const error=questionError(Number(n),answers);
+      if(error){
+        page=PAGES.findIndex(p=>p[1].includes(Number(n)));
+        correcting=true;
+        show([n,error]);
+        return;
+      }
+    }
+    for(const input of form.elements) input.disabled=true;
+    next.textContent='Đang gửi…';
+    try {
+      const response = await fetch('https://khao-sat-nhan-luc-ctxh.cottondogwood4.chatgpt.site/api/submit', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:receipt,answers}),
+        signal:AbortSignal.timeout(45000)
+      });
+      const result = await response.json();
+      if (!response.ok || !result.ok) throw new Error(result.error || 'Chưa lưu được phản hồi.');
+
+      screen.replaceChildren();
+      el('h2','Cảm ơn Quý Đơn vị đã tham gia khảo sát!',screen);
+      el('p','Bộ môn Công tác xã hội đã nhận được phản hồi.',screen);
+    } catch(error) {
+      for(const input of form.elements) input.disabled=false;
+      next.textContent='Gửi lại';
+      status.textContent=error?.message||'Chưa gửi được phản hồi. Vui lòng thử lại.';
+    }
+  };
+  heading.focus();
+  window.scrollTo(0,0);
+  if(issue) displayError(...issue);
+}
+show();
+
+</script></body></html>
